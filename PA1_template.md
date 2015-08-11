@@ -34,7 +34,7 @@ The data was downloaded from the coarse website on 2015-08-09.
 
 ## What is mean total number of steps taken per day?
 
-For this part of the assignment, you can ignore the missing values in the dataset.  
+For this part of the assignment, you can ignore the missing values in the dataset.
 
 1. Calculate the total number of steps taken per day
 
@@ -69,7 +69,8 @@ and the median is 10765
 ```r
 sumByInterval <- ddply(myData, "interval", na.rm = TRUE, numcolwise(sum))
 numOfdays <- length(totalsByDay)
-plot(sumByInterval$interval, sumByInterval$steps/numOfdays, type = "l", col = "red", lwd = 2, ann=FALSE)
+avStepsInterval <- sumByInterval$steps/numOfdays
+plot(sumByInterval$interval, avStepsInterval, type = "l", col = "red", lwd = 2, ann=FALSE)
 title(xlab="Interval", ylab="Av. Steps", main="Average steps for intervals")
 ```
 
@@ -100,11 +101,32 @@ numNAs <- sum(is.na(myData$steps))
 
 The total number of missing values is 2304.
 
-2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
-
-
-
+2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.  
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+
+```r
+# Replace NAs with the mean for that interval
+dataLength <- dim(myData)[1]
+noNAs <- rep(0, dataLength)
+
+for (i in 1:dataLength){
+        if (is.na(myData$steps[i])){
+                intervalIndex <- which(sumByInterval$interval == myData$interval[i], arr.ind = TRUE)
+                noNAs[i] <- avStepsInterval[intervalIndex]
+        }
+        else
+                noNAs[i] <- myData$steps[i]
+}
+
+myDataNew <- data.frame (noNAs, myData$date, myData$interval)
+totalsByDayNew <- ddply(myDataNew, "myData.date", numcolwise(sum))$noNAs
+hist(totalsByDayNew, col="green", ann=FALSE, breaks = 10)
+```
+
+![](PA1_template_files/figure-html/filling NAs-1.png) 
+
+
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
