@@ -27,7 +27,7 @@ Load the data.
 data_download <- mdy("August 9, 2015")
 myData <- read.csv("activity.csv")
 ```
-The data was downloaded from the coarse website on `r data_download`.  
+The data was downloaded from the course website on `r data_download`.  
 
 Process/transform the data (if necessary) into a format suitable for your 
 analysis.  
@@ -212,8 +212,7 @@ xyplot(avStepsIntervalNew ~ sumByIntervalNew$interval |
 ```
 
 The plot above shows comparison of average steps per interval for weekdays and
-weekends. We can see increades activity during weekends.
-
+weekends. We can see increased activity during weekends.
 
 
 
